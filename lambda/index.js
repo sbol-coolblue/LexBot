@@ -1,6 +1,7 @@
 shutUp = require('shutUp.js');
 laptop = require('laptop.js');
-joke = require('joke.js');
+humor = require('humor.js');
+username = require('storeUsername.js');
 
 /**
  * Called when the user specifies an intent for this skill.
@@ -17,8 +18,12 @@ function dispatch(intentRequest, callback) {
     // Dispatch to your skill's intent handlers
     if (intentName === 'LaptopProductAdvice') {
         return laptop.handleDialogFlow(intentRequest, callback);
-    } else if (intentName === 'joke') {
-        return joke.handleDialogFlow(intentRequest, callback);
+    } else if (intentName === 'AskCustomerName') {
+        return username.askCustomersName(intentRequest, callback);
+    } else if (intentName === 'Joke') {
+        return humor.handleJoke(intentRequest, callback);
+    } else if (intentName === 'Compliment') {
+        return humor.handleCompliment(intentRequest, callback);
     }
 
     throw new Error(`Intent with name ${intentName} not supported`);
