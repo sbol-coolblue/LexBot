@@ -1,5 +1,6 @@
 'use strict';
 const responses = require('./responses.js');
+const https = require('https');
 
 /**
  * This sample demonstrates an implementation of the Lex Code Hook Interface
@@ -23,6 +24,53 @@ function branchGamingIntention(sessionAttributes, intentName, slots) {
     }
 
     return responses.delegate(sessionAttributes, slots);
+}
+
+function searchLaptops(intentRequest, callback) {
+   let postBody = JSON.stringify({
+      fetch: ["products"],
+      query: "laptops",
+      filters: {}
+    });
+
+    // make a request
+   const options = {
+     hostname: 'mobile-api.coolblue-production.eu',
+     path: '/v5/search',
+     method: 'POST',
+     headers: {
+       'Accept': 'application/json',
+       'Content-Type': 'application/json',
+       'Accept-Language': 'nl-NL'
+     }
+   };
+
+   const req = https.request(options, (res) => {
+        let output = '';
+        res.setEncoding('utf8');
+
+        // Listener to receive data
+        res.on('data', (chunk) => {
+            output += chunk;
+        });
+
+        // Listener for intializing callback after receiving complete response
+        res.on('end', () => {
+            let response = JSON.parse(output);
+            let reply = "I think I found what you need. What do you think of these laptops?\n"
+
+            for(let i = 0; i < 3; i++) {
+                reply += "http://coolblue-redirect.s3-website-us-east-1.amazonaws.com/productPage/?productId=" + response.products[i].productId + " \n";
+            }
+
+            callback(close(intentRequest.sessionAttributes, 'Fulfilled', {
+                contentType: 'PlainText',
+                content: reply
+            }));
+        });
+      });
+   req.write(postBody);
+   req.end();
 }
 
 /**
