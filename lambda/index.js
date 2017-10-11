@@ -28,3 +28,24 @@ function dispatch(intentRequest, callback) {
 
     throw new Error(`Intent with name ${intentName} not supported`);
 }
+
+exports.handler = (event, context, callback) => {
+    try {
+        // By default, treat the user request as coming from the America/New_York time zone.
+        process.env.TZ = 'Europe/Amsterdam';
+        console.log(`event.bot.name=${event.bot.name}`);
+
+        /**
+         * Uncomment this if statement and populate with your Lex bot name and / or version as
+         * a sanity check to prevent invoking this Lambda function from an undesired Lex bot or
+         * bot version.
+         */
+        if (event.bot.name !== 'Joey') {
+             callback('Bot Name invalid. Not handling this request...');
+        }
+
+        dispatch(event, (response) => callback(null, response));
+    } catch (err) {
+        callback(err);
+    }
+};
