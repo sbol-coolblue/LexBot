@@ -16,7 +16,7 @@ function buildValidationResult(isValid, violatedSlot, messageContent) {
 function validateName(name) {
     const badWords = ['Roelof', 'Sander', 'Joey'];
 
-    if (badWords.includes(name)) {
+    if (badWords.indexOf(name) !== -1) {
         return buildValidationResult(false, 'name', 'I do not believe that is your real name...');
     }
 
@@ -60,7 +60,7 @@ exports.askCustomersName = (intentRequest, callback) => {
             'Fulfilled',
             {
                 contentType: 'PlainText',
-                content: `Alrighty! A pleasure to meet you, ${name}! My name is Joey, and I'm into techno and long walks on the beach. And helping you find the best matching product! What type of product are you looking for?`
+                content: `Alrighty! A pleasure to meet you, ${name}! My name is Chad, and I'm into techno and long walks on the beach. And helping you find the best matching product! What type of product are you looking for?`
             }
         )
     );

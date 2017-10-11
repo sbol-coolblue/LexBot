@@ -43,3 +43,17 @@ exports.delegate = (sessionAttributes, slots) => {
         },
     };
 };
+
+exports.buildValidationResult = (isValid, violatedSlot, messageContent) => {
+    if (messageContent === null) {
+        return {
+            isValid,
+            violatedSlot,
+        };
+    }
+    return {
+        isValid,
+        violatedSlot,
+        message: { contentType: 'PlainText', content: messageContent },
+    };
+};
